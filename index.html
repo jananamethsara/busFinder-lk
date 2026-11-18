@@ -1,0 +1,1576 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>BusFinder LK</title>
+
+  <style>
+    /* GENERAL */
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f3f7fb;
+      color: #203044;
+    }
+
+    header {
+      background: linear-gradient(135deg, #103b5c, #176b85);
+      color: white;
+      padding: 45px 20px 85px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+
+    header p {
+      color: #d5eaf2;
+      font-size: 16px;
+    }
+
+    .container {
+      background: white;
+      max-width: 650px;
+      margin: -45px auto 40px;
+      padding: 35px;
+      border-radius: 18px;
+      box-shadow: 0 12px 35px rgba(20, 50, 80, 0.12);
+      position: relative;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #123b5d;
+    }
+
+    label {
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 7px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    input,
+    button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 9px;
+      font-size: 16px;
+      font-family: inherit;
+    }
+
+    input {
+      border: 1px solid #d1dce5;
+      background: white;
+      color: #203044;
+    }
+
+    input:focus {
+      outline: 2px solid #1b8d83;
+      outline-offset: 1px;
+    }
+
+    button {
+      background: #087e65;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 25px;
+      transition: background 0.2s;
+    }
+
+    button:hover {
+      background: #065d4b;
+    }
+
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid #123b5d;
+      outline-offset: 3px;
+    }
+
+    /* NAVIGATION */
+
+    .navbar {
+      background: #123b5d;
+      padding: 16px 20px;
+    }
+
+    .nav-container {
+      max-width: 1100px;
+      margin: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .nav-logo {
+      color: white;
+      font-size: 20px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 25px;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 15px;
+    }
+
+    .nav-links a:hover {
+      color: #7ce4cf;
+    }
+
+    /* SEARCH FORM */
+
+    .swap-btn {
+      background: #e9f3f7;
+      color: #123b5d;
+      border: 1px solid #c8dce5;
+      margin-top: 15px;
+    }
+
+    .swap-btn:hover {
+      background: #d6eaf1;
+    }
+
+    .clear-btn {
+      background: #e2e8f0;
+      color: #334155;
+      margin-top: 12px;
+    }
+
+    .clear-btn:hover {
+      background: #cbd5e1;
+    }
+
+    /* CITY AUTOCOMPLETE */
+
+    .city-search {
+      position: relative;
+    }
+
+    .city-suggestions {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 1px solid #d1dce5;
+      border-radius: 9px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      max-height: 220px;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .city-option {
+      display: block;
+      width: 100%;
+      padding: 12px 15px;
+      margin: 0;
+      background: white;
+      color: #203044;
+      border: none;
+      border-radius: 0;
+      text-align: left;
+      font-size: 16px;
+      font-weight: normal;
+      cursor: pointer;
+    }
+
+    .city-option:hover,
+    .city-option:focus {
+      background: #e9f3f7;
+      color: #123b5d;
+    }
+
+    /* SEARCH RESULTS */
+
+    #result {
+      margin-top: 28px;
+      line-height: 1.6;
+      scroll-margin-top: 20px;
+    }
+
+    .search-summary {
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      border-radius: 12px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+
+    .search-summary h3 {
+      color: #123b5d;
+      margin: 0 0 10px;
+    }
+
+    .search-summary p {
+      color: #334155;
+      margin: 7px 0;
+    }
+
+    .website-count,
+    .phone-count {
+      display: inline-block;
+      background: #d1fae5;
+      color: #065f46 !important;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: 10px !important;
+    }
+
+    .phone-count {
+      background: #dbeafe;
+      color: #1d4ed8 !important;
+      margin-left: 6px !important;
+    }
+
+    .section-heading {
+      margin: 28px 0 12px;
+      color: #123b5d;
+      font-size: 21px;
+    }
+
+    .result-card {
+      padding: 18px;
+      margin-top: 14px;
+      border: 1px solid #e0e7ee;
+      border-radius: 12px;
+      background: #fbfdff;
+      overflow-wrap: anywhere;
+    }
+
+    .result-card strong {
+      font-size: 18px;
+      color: #123b5d;
+    }
+
+    .result-card p {
+      color: #526477;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .website-link {
+      display: inline-block;
+      background: #087e65;
+      color: white;
+      text-decoration: none;
+      padding: 11px 15px;
+      border-radius: 8px;
+      margin-top: 6px;
+      font-weight: bold;
+    }
+
+    .website-link:hover {
+      background: #065d4b;
+    }
+
+    .source-link {
+      color: #176b85;
+      text-decoration: underline;
+      font-size: 14px;
+    }
+
+    /* PHONE BOOKING BUSES */
+
+    .phone-bus-card {
+      background: #ffffff;
+      border: 1px solid #bcdcd4;
+      border-left: 5px solid #087e65;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 15px;
+      overflow-wrap: anywhere;
+    }
+
+    .phone-bus-card h4 {
+      margin: 0 0 15px;
+      color: #123b5d;
+      font-size: 20px;
+    }
+
+    .bus-detail {
+      margin: 10px 0;
+      color: #334155;
+      line-height: 1.6;
+    }
+
+    .bus-detail-title {
+      font-weight: bold;
+      color: #123b5d;
+    }
+
+    .departure-times {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 10px 0 18px;
+    }
+
+    .time-badge {
+      display: inline-block;
+      background: #e9f3f7;
+      color: #123b5d;
+      border: 1px solid #c8dce5;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .phone-numbers {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .phone-number-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 11px 14px;
+      border-radius: 9px;
+      border: 1px solid #a7f3d0;
+      background: #ecfdf5;
+      color: #065f46;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      min-height: 46px;
+    }
+
+    .phone-number-link:hover {
+      background: #d1fae5;
+      text-decoration: underline;
+    }
+
+    .phone-note {
+      font-size: 13px;
+      color: #64748b;
+      margin-top: 15px;
+      line-height: 1.6;
+    }
+
+    /* NOTICES */
+
+    .booking-notice {
+      background: #f8fafc;
+      border-left: 4px solid #087e65;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 15px 0;
+      color: #475569;
+      line-height: 1.6;
+    }
+
+    .no-routes-message,
+    .info-message {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+      color: #1e40af;
+    }
+
+    .error-message {
+      background: #fff1f2;
+      color: #9f1239;
+      border: 1px solid #fecdd3;
+      border-radius: 10px;
+      padding: 15px;
+      margin-top: 15px;
+      font-weight: 500;
+    }
+
+    /* FEATURED ROUTES */
+
+    .popular-section {
+      max-width: 950px;
+      margin: 40px auto;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .popular-section h2 {
+      color: #123b5d;
+    }
+
+    .popular-section > p {
+      color: #64748b;
+    }
+
+    .popular-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .popular-card {
+      background: white;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px #0001;
+      border: 1px solid #e2e8f0;
+    }
+
+    .popular-card h3 {
+      color: #123b5d;
+      font-size: 18px;
+    }
+
+    .popular-card button {
+      margin-top: 12px;
+    }
+
+    /* BOOKING PLATFORMS */
+
+    .platforms-section {
+      max-width: 950px;
+      margin: 40px auto;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .platforms-section h2 {
+      color: #123b5d;
+    }
+
+    .platforms-section > p {
+      color: #64748b;
+    }
+
+    .platform-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .platform-card {
+      background: white;
+      padding: 25px 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px #0001;
+      border: 1px solid #e2e8f0;
+    }
+
+    .platform-card h3 {
+      color: #123b5d;
+      font-size: 18px;
+    }
+
+    .platform-card a {
+      display: inline-block;
+      background: #087e65;
+      color: white;
+      padding: 11px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+
+    .platform-card a:hover {
+      background: #065d4b;
+    }
+
+    /* ABOUT */
+
+    .about-section {
+      max-width: 900px;
+      margin: 40px auto;
+      padding: 35px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px #0001;
+      text-align: center;
+    }
+
+    .about-section h2 {
+      color: #123b5d;
+    }
+
+    .about-section p {
+      color: #526477;
+      line-height: 1.8;
+    }
+
+    footer {
+      text-align: center;
+      color: #687a89;
+      font-size: 13px;
+      padding: 20px;
+    }
+
+    /* MOBILE RESPONSIVE */
+
+    @media (max-width: 700px) {
+      header {
+        padding: 35px 15px 75px;
+      }
+
+      header h1 {
+        font-size: 27px;
+      }
+
+      .container {
+        margin: -40px 15px 25px;
+        padding: 22px;
+      }
+
+      .nav-container {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 15px;
+      }
+
+      .nav-logo {
+        font-size: 18px;
+      }
+
+      .about-section {
+        margin: 25px 15px;
+        padding: 25px;
+      }
+
+      .platform-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .popular-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .popular-section {
+        padding: 15px;
+      }
+
+      .container {
+        padding: 20px;
+      }
+
+      .container h2 {
+        font-size: 22px;
+        line-height: 1.4;
+      }
+
+      #from,
+      #to,
+      #date,
+      .container button {
+        min-height: 48px;
+        font-size: 16px;
+      }
+
+      .container label {
+        margin-top: 18px;
+      }
+
+      .city-suggestions {
+        max-height: 180px;
+      }
+
+      .city-option {
+        padding: 14px;
+        font-size: 16px;
+      }
+
+      .search-summary,
+      .result-card,
+      .phone-bus-card {
+        padding: 16px;
+      }
+
+      .website-link {
+        display: block;
+        text-align: center;
+        padding: 13px 16px;
+      }
+
+      .website-count,
+      .phone-count {
+        font-size: 13px;
+        padding: 8px 12px;
+      }
+
+      .phone-number-link {
+        font-size: 15px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .platform-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAVIGATION -->
+
+  <nav class="navbar">
+    <div class="nav-container">
+
+      <a href="#home" class="nav-logo">
+        🚌 BusFinder LK
+      </a>
+
+      <div class="nav-links">
+        <a href="#home">Home</a>
+        <a href="#search">Search</a>
+        <a href="#popular">Featured Routes</a>
+        <a href="#platforms">Platforms</a>
+        <a href="#about">About</a>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- HEADER -->
+
+  <header id="home">
+    <h1>🚌 BusFinder LK</h1>
+    <p>
+      Find Bus Booking Websites and Phone Booking Buses
+    </p>
+  </header>
+
+  <!-- SEARCH FORM -->
+
+  <div class="container" id="search">
+
+    <h2>Search Bus Routes</h2>
+
+    <label for="from">From</label>
+
+    <div class="city-search">
+      <input
+        type="text"
+        id="from"
+        placeholder="Type departure city..."
+        autocomplete="off"
+      >
+
+      <div
+        id="fromSuggestions"
+        class="city-suggestions"
+      ></div>
+    </div>
+
+    <button
+      type="button"
+      class="swap-btn"
+      onclick="swapLocations()"
+    >
+      ↕ Swap Locations
+    </button>
+
+    <label for="to">To</label>
+
+    <div class="city-search">
+      <input
+        type="text"
+        id="to"
+        placeholder="Type destination city..."
+        autocomplete="off"
+      >
+
+      <div
+        id="toSuggestions"
+        class="city-suggestions"
+      ></div>
+    </div>
+
+    <label for="date">Travel Date</label>
+
+    <input type="date" id="date">
+
+    <button type="button" onclick="searchBus()">
+      Search Bus Routes
+    </button>
+
+    <button
+      type="button"
+      class="clear-btn"
+      onclick="clearSearch()"
+    >
+      Clear Search
+    </button>
+
+    <div id="result" aria-live="polite"></div>
+
+  </div>
+
+  <!-- FEATURED ROUTES -->
+
+  <section class="popular-section" id="popular">
+
+    <h2>🚌 Featured Bus Routes</h2>
+
+    <p>
+      Select a route to quickly fill your search.
+    </p>
+
+    <div class="popular-grid" id="popularRoutes"></div>
+
+  </section>
+
+  <!-- BOOKING PLATFORMS -->
+
+  <section class="platforms-section" id="platforms">
+
+    <h2>🚌 All Booking Websites</h2>
+
+    <p>
+      Explore bus booking platforms in Sri Lanka.
+    </p>
+
+    <div class="platform-grid">
+
+      <div class="platform-card">
+        <h3>Magiya.lk</h3>
+        <a
+          href="https://magiya.lk"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Visit Website
+        </a>
+      </div>
+
+      <div class="platform-card">
+        <h3>Bus.lk</h3>
+        <a
+          href="https://bus.lk"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Visit Website
+        </a>
+      </div>
+
+      <div class="platform-card">
+        <h3>BusSeat.lk</h3>
+        <a
+          href="https://busseat.lk"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Visit Website
+        </a>
+      </div>
+
+      <div class="platform-card">
+        <h3>Superline.lk</h3>
+        <a
+          href="https://www.superline.lk/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Visit Website
+        </a>
+      </div>
+
+      <div class="platform-card">
+        <h3>Nuwantha Enterprises</h3>
+        <a
+          href="https://nuwanthaenterprises.com"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Visit Website
+        </a>
+      </div>
+
+      <div class="platform-card">
+        <h3>SLTB eSeat</h3>
+        <a
+          href="https://sltb.eseat.lk"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Visit Website
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- LOAD BUS ROUTES DATA -->
+
+  <script src="routes.js"></script>
+
+  <script>
+
+    // CITY LIST
+
+    const cities = [
+      "Colombo",
+      "Jaffna",
+      "Kandy",
+      "Galle",
+      "Matara",
+      "Anuradhapura",
+      "Kurunegala",
+      "Trincomalee",
+      "Batticaloa",
+      "Badulla",
+      "Kalmunai",
+      "Ampara",
+      "Katunayake",
+      "Meegahakiula",
+      "Mahiyanganaya",
+      "Panadura",
+      "Nintavur",
+      "Sammanthurai",
+      "Makumbura",
+      "Passara",
+      "Panama",
+      "Vavuniya",
+      "Rathnapura",
+      "Akkaraipattu",
+      "Raddolugama",
+      "Maharagama",
+      "Diyathalawa",
+      "Deniyaya",
+      "Embilipitiya",
+      "Negombo",
+      "Tangalle",
+      "Mulativu"
+
+    ];
+
+    // DATE
+
+    const dateInput = document.getElementById("date");
+
+    function getToday() {
+      const now = new Date();
+
+      const local = new Date(
+        now.getTime() - now.getTimezoneOffset() * 60000
+      );
+
+      return local.toISOString().split("T")[0];
+    }
+
+    dateInput.min = getToday();
+
+    // CITY VALIDATION
+
+    function getValidCity(inputId) {
+      const typed = document
+        .getElementById(inputId)
+        .value
+        .trim()
+        .toLowerCase();
+
+      return cities.find(
+        city => city.toLowerCase() === typed
+      ) || null;
+    }
+
+    // CITY AUTOCOMPLETE
+
+    function setupCityAutocomplete(inputId, suggestionsId) {
+
+      const input = document.getElementById(inputId);
+      const suggestions = document.getElementById(suggestionsId);
+
+      function hideSuggestions() {
+        suggestions.style.display = "none";
+        suggestions.innerHTML = "";
+      }
+
+      input.addEventListener("input", function() {
+
+        const query = input.value.trim().toLowerCase();
+
+        suggestions.innerHTML = "";
+
+        if (query === "") {
+          hideSuggestions();
+          return;
+        }
+
+        const matches = cities.filter(
+          city => city.toLowerCase().startsWith(query)
+        );
+
+        if (matches.length === 0) {
+          hideSuggestions();
+          return;
+        }
+
+        matches.forEach(city => {
+
+          const option = document.createElement("button");
+
+          option.type = "button";
+          option.className = "city-option";
+          option.textContent = city;
+
+          option.addEventListener("click", function() {
+            input.value = city;
+            hideSuggestions();
+            input.focus();
+          });
+
+          suggestions.appendChild(option);
+
+        });
+
+        suggestions.style.display = "block";
+      });
+
+      input.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+          hideSuggestions();
+        }
+      });
+
+      document.addEventListener("click", function(event) {
+        if (!input.parentElement.contains(event.target)) {
+          hideSuggestions();
+        }
+      });
+    }
+
+    setupCityAutocomplete("from", "fromSuggestions");
+    setupCityAutocomplete("to", "toSuggestions");
+
+    // SWAP LOCATIONS
+
+    function swapLocations() {
+
+      const fromInput = document.getElementById("from");
+      const toInput = document.getElementById("to");
+
+      const temp = fromInput.value;
+
+      fromInput.value = toInput.value;
+      toInput.value = temp;
+
+      document.getElementById("fromSuggestions").style.display = "none";
+      document.getElementById("toSuggestions").style.display = "none";
+
+      document.getElementById("result").innerHTML = "";
+    }
+
+    // SHOW ERROR OR INFORMATION MESSAGE
+
+    function showMessage(container, message, type) {
+
+      const box = document.createElement("div");
+
+      box.className =
+        type === "error"
+          ? "error-message"
+          : "info-message";
+
+      box.textContent = message;
+
+      container.appendChild(box);
+    }
+
+    // CLEAR SEARCH
+
+    function clearSearch() {
+
+      document.getElementById("from").value = "";
+      document.getElementById("to").value = "";
+      document.getElementById("date").value = "";
+      document.getElementById("result").innerHTML = "";
+
+      document.getElementById("fromSuggestions").style.display = "none";
+      document.getElementById("toSuggestions").style.display = "none";
+    }
+
+    // FEATURED ROUTES
+
+    function displayFeaturedRoutes() {
+
+      const container = document.getElementById("popularRoutes");
+
+      container.innerHTML = "";
+
+      const featuredRoutes = busRoutes.slice(0, 4);
+
+      featuredRoutes.forEach(route => {
+
+        const card = document.createElement("div");
+        card.className = "popular-card";
+
+        const title = document.createElement("h3");
+        title.textContent = route.from + " → " + route.to;
+
+        const button = document.createElement("button");
+        button.textContent = "Select Route";
+
+        button.addEventListener("click", function() {
+          selectFeaturedRoute(route.from, route.to);
+        });
+
+        card.appendChild(title);
+        card.appendChild(button);
+        container.appendChild(card);
+      });
+    }
+
+    function selectFeaturedRoute(from, to) {
+
+      document.getElementById("from").value = from;
+      document.getElementById("to").value = to;
+
+      document.getElementById("result").innerHTML = "";
+
+      document.getElementById("search").scrollIntoView({
+        behavior: "smooth"
+      });
+    }
+
+    displayFeaturedRoutes();
+
+    // SEARCH SUMMARY
+
+    function showSearchSummary(
+      container,
+      from,
+      to,
+      date,
+      websiteCount,
+      phoneBusCount
+    ) {
+
+      const summary = document.createElement("div");
+      summary.className = "search-summary";
+
+      const title = document.createElement("h3");
+      title.textContent = from + " → " + to;
+
+      const dateText = document.createElement("p");
+      dateText.textContent = "Travel date: " + date;
+
+      const websiteText = document.createElement("p");
+      websiteText.className = "website-count";
+
+      websiteText.textContent =
+        websiteCount === 0
+          ? "No booking websites found"
+          : websiteCount === 1
+            ? "1 booking website found"
+            : websiteCount + " booking websites found";
+
+      const phoneText = document.createElement("p");
+      phoneText.className = "phone-count";
+
+      phoneText.textContent =
+        phoneBusCount === 0
+          ? "No phone booking buses found"
+          : phoneBusCount === 1
+            ? "1 phone booking bus found"
+            : phoneBusCount + " phone booking buses found";
+
+      summary.appendChild(title);
+      summary.appendChild(dateText);
+      summary.appendChild(websiteText);
+      summary.appendChild(phoneText);
+
+      container.appendChild(summary);
+    }
+
+    // BOOKING WEBSITE NOTICE
+
+    function showBookingNotice(container) {
+
+      const notice = document.createElement("div");
+      notice.className = "booking-notice";
+
+      notice.textContent =
+        "BusFinder LK does not sell tickets directly. " +
+        "Please check schedules, prices and seat availability " +
+        "on the external booking website.";
+
+      container.appendChild(notice);
+    }
+
+    // PHONE BOOKING NOTICE
+
+    function showPhoneNotice(container) {
+
+      const notice = document.createElement("div");
+      notice.className = "booking-notice";
+
+      notice.textContent =
+        "Phone booking information is provided for reference. " +
+        "Departure times and contact numbers may change. " +
+        "Please call the bus operator to confirm the schedule, " +
+        "ticket price and seat availability before travelling.";
+
+      container.appendChild(notice);
+    }
+
+    // AUTO SCROLL
+
+    function scrollToResults() {
+
+      document.getElementById("result").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+
+    // FORMAT PHONE NUMBER FOR DISPLAY
+
+    function formatPhoneNumber(number) {
+
+      const cleaned = String(number).replace(/\D/g, "");
+
+      if (cleaned.length === 10) {
+        return (
+          cleaned.slice(0, 3) + " " +
+          cleaned.slice(3, 6) + " " +
+          cleaned.slice(6)
+        );
+      }
+
+      return String(number);
+    }
+
+    // DISPLAY BOOKING WEBSITES
+
+    function displayBookingWebsites(container, websites) {
+
+      if (websites.length === 0) {
+        return;
+      }
+
+      const heading = document.createElement("h3");
+      heading.className = "section-heading";
+      heading.textContent = "🌐 Booking Websites";
+
+      container.appendChild(heading);
+
+      showBookingNotice(container);
+
+      websites.forEach(website => {
+
+        const card = document.createElement("div");
+        card.className = "result-card";
+
+        const name = document.createElement("strong");
+        name.textContent = website.name;
+
+        const status = document.createElement("p");
+        status.textContent =
+          "Route information: " + website.status;
+
+        const note = document.createElement("p");
+        note.textContent =
+          "Check schedules and seat availability " +
+          "on the booking website.";
+
+        const link = document.createElement("a");
+        link.href = website.url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.className = "website-link";
+        link.textContent = "Visit Booking Website";
+
+        card.appendChild(name);
+        card.appendChild(status);
+        card.appendChild(note);
+        card.appendChild(link);
+
+        if (website.source) {
+
+          const source = document.createElement("p");
+          const sourceLink = document.createElement("a");
+
+          sourceLink.href = website.source;
+          sourceLink.target = "_blank";
+          sourceLink.rel = "noopener noreferrer";
+          sourceLink.className = "source-link";
+          sourceLink.textContent = "View Route Source";
+
+          source.appendChild(sourceLink);
+          card.appendChild(source);
+        }
+
+        if (website.lastChecked) {
+
+          const checked = document.createElement("p");
+
+          checked.textContent =
+            "Last checked: " + website.lastChecked;
+
+          card.appendChild(checked);
+        }
+
+        container.appendChild(card);
+      });
+    }
+
+    // DISPLAY PHONE BOOKING BUSES
+
+    function displayPhoneBuses(
+      container,
+      phoneBuses,
+      departureCity
+    ) {
+
+      if (phoneBuses.length === 0) {
+        return;
+      }
+
+      const heading = document.createElement("h3");
+      heading.className = "section-heading";
+      heading.textContent = "📞 Phone Booking Buses";
+
+      container.appendChild(heading);
+
+      showPhoneNotice(container);
+
+      phoneBuses.forEach(bus => {
+
+        const card = document.createElement("div");
+        card.className = "phone-bus-card";
+
+        // BUS NAME
+
+        const name = document.createElement("h4");
+        name.textContent = "🚌 " + bus.name;
+
+        card.appendChild(name);
+
+        // DEPARTURE CITY
+
+        const departureLabel = document.createElement("p");
+        departureLabel.className = "bus-detail";
+
+        departureLabel.textContent =
+          "Departure from: " + departureCity;
+
+        card.appendChild(departureLabel);
+
+        // GET CORRECT DEPARTURE TIMES
+        // DEPENDS ON SEARCH DIRECTION
+
+        const departureTimes =
+          bus.departureTimes &&
+          bus.departureTimes[departureCity]
+            ? bus.departureTimes[departureCity]
+            : [];
+
+        const timeTitle = document.createElement("p");
+        timeTitle.className = "bus-detail-title";
+        timeTitle.textContent = "⏰ Departure Times:";
+
+        card.appendChild(timeTitle);
+
+        if (departureTimes.length > 0) {
+
+          const timeContainer = document.createElement("div");
+          timeContainer.className = "departure-times";
+
+          departureTimes.forEach(time => {
+
+            const timeBadge = document.createElement("span");
+            timeBadge.className = "time-badge";
+            timeBadge.textContent = time;
+
+            timeContainer.appendChild(timeBadge);
+          });
+
+          card.appendChild(timeContainer);
+
+        } else {
+
+          const noTime = document.createElement("p");
+          noTime.className = "bus-detail";
+          noTime.textContent =
+            "Departure time not available. Please call to confirm.";
+
+          card.appendChild(noTime);
+        }
+
+        // CONTACT NUMBERS
+
+        const phoneTitle = document.createElement("p");
+        phoneTitle.className = "bus-detail-title";
+        phoneTitle.textContent = "📱 Contact Numbers:";
+
+        card.appendChild(phoneTitle);
+
+        const phoneContainer = document.createElement("div");
+        phoneContainer.className = "phone-numbers";
+
+        const numbers = Array.isArray(bus.phoneNumbers)
+          ? bus.phoneNumbers
+          : [];
+
+        numbers.forEach(number => {
+
+          const cleanedNumber =
+            String(number).replace(/[^\d+]/g, "");
+
+          if (!cleanedNumber) {
+            return;
+          }
+
+          const phoneLink = document.createElement("a");
+
+          // OPEN PHONE DIALER
+          phoneLink.href = "tel:" + cleanedNumber;
+
+          phoneLink.className = "phone-number-link";
+
+          phoneLink.textContent =
+            "📞 " + formatPhoneNumber(number);
+
+          phoneLink.setAttribute(
+            "aria-label",
+            "Dial " + cleanedNumber
+          );
+
+          phoneContainer.appendChild(phoneLink);
+        });
+
+        card.appendChild(phoneContainer);
+
+        // PHONE NOTICE
+
+        const note = document.createElement("p");
+        note.className = "phone-note";
+
+        note.textContent =
+          "Tap a phone number to open your phone dialer. " +
+          "You can choose whether to make the call.";
+
+        card.appendChild(note);
+
+        container.appendChild(card);
+      });
+    }
+
+    // MAIN SEARCH FUNCTION
+
+    function searchBus() {
+
+      const fromInput = document
+        .getElementById("from")
+        .value
+        .trim();
+
+      const toInput = document
+        .getElementById("to")
+        .value
+        .trim();
+
+      const from = getValidCity("from");
+      const to = getValidCity("to");
+
+      const date = dateInput.value;
+
+      const result = document.getElementById("result");
+
+      result.innerHTML = "";
+
+      // CHECK EMPTY FIELDS
+
+      if (!fromInput || !toInput || !date) {
+
+        showMessage(
+          result,
+          "Please select departure, destination and travel date.",
+          "error"
+        );
+
+        scrollToResults();
+        return;
+      }
+
+      // CHECK VALID CITIES
+
+      if (!from || !to) {
+
+        showMessage(
+          result,
+          "Please select a valid city from the suggestions.",
+          "error"
+        );
+
+        scrollToResults();
+        return;
+      }
+
+      // CHECK SAME LOCATIONS
+
+      if (from === to) {
+
+        showMessage(
+          result,
+          "Departure and destination cannot be the same.",
+          "error"
+        );
+
+        scrollToResults();
+        return;
+      }
+
+      // CHECK PAST DATE
+
+      if (date < getToday()) {
+
+        showMessage(
+          result,
+          "Please select today or a future date.",
+          "error"
+        );
+
+        scrollToResults();
+        return;
+      }
+
+      // FIND ROUTE IN BOTH DIRECTIONS
+
+      const route = busRoutes.find(bus =>
+        (bus.from === from && bus.to === to) ||
+        (bus.from === to && bus.to === from)
+      );
+
+      // GET WEBSITES AND PHONE BUSES
+
+      const websites =
+        route && Array.isArray(route.websites)
+          ? route.websites
+          : [];
+
+      const phoneBuses =
+        route && Array.isArray(route.phoneBuses)
+          ? route.phoneBuses
+          : [];
+
+      // DISPLAY SEARCH SUMMARY
+
+      showSearchSummary(
+        result,
+        from,
+        to,
+        date,
+        websites.length,
+        phoneBuses.length
+      );
+
+      // NO RESULTS FOUND
+
+      if (websites.length === 0 && phoneBuses.length === 0) {
+
+        const message = document.createElement("div");
+        message.className = "no-routes-message";
+
+        message.textContent =
+          "No booking websites or phone booking buses " +
+          "are listed for this route yet. " +
+          "Please try another route.";
+
+        result.appendChild(message);
+
+        scrollToResults();
+        return;
+      }
+
+      // DISPLAY WEBSITES IF AVAILABLE
+
+      displayBookingWebsites(result, websites);
+
+      // DISPLAY PHONE BUSES IF AVAILABLE
+
+      displayPhoneBuses(result, phoneBuses, from);
+
+      // SCROLL TO RESULTS
+
+      scrollToResults();
+    }
+
+  </script>
+
+  <!-- ABOUT -->
+
+  <section class="about-section" id="about">
+
+    <h2>About BusFinder LK</h2>
+
+    <p>
+      BusFinder LK helps passengers discover
+      bus booking websites and phone booking buses
+      for routes across Sri Lanka.
+    </p>
+
+    <p>
+      Select your departure city, destination,
+      and travel date to explore available
+      booking website listings and bus contact details.
+    </p>
+
+    <p>
+      BusFinder LK does not sell tickets directly.
+      Bookings and seat availability are handled
+      by external booking platforms and bus operators.
+    </p>
+
+  </section>
+
+  <!-- FOOTER -->
+
+  <footer>
+    <p>© 2026 BusFinder LK. All rights reserved.</p>
+
+    <p>
+      Find booking websites and bus contact details.
+      Confirm schedules and availability before travelling.
+    </p>
+  </footer>
+
+</body>
+</html>
