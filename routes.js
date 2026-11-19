@@ -1,363 +1,274 @@
 
+/*
+  BusFinder LK - Complete Routes
+  Total unique route pairs: 53
+
+  Search works in both directions through index.html.
+  Booking availability must be checked
+  on each provider's website.
+*/
+
+// Booking website helper
+function bookingSite(name, url, verified = false) {
+  return {
+    name: name,
+    url: url,
+    status: "Check route on booking website",
+    verified: verified,
+    source: url,
+    lastChecked: null
+  };
+}
+
+// Booking websites
+const Magiya = () =>
+  bookingSite("Magiya.lk", "https://magiya.lk/journeys/search");
+
+const Superline = () =>
+  bookingSite("Superline.lk", "https://www.superline.lk/");
+
+const BookMyBus = () =>
+  bookingSite("BookMyBus.lk", "https://bookmybus.lk");
+
+const WayToGo = () =>
+  bookingSite("WayToGo.lk", "https://waytogo.lk");
+
+const RADBookings = () =>
+  bookingSite("RADBookings.lk", "https://radbookings.lk");
+
+const BusSeat = () =>
+  bookingSite("BusSeat.lk", "https://busseat.lk");
+
+const BusLK = () =>
+  bookingSite("Bus.lk", "https://bus.lk");
+
+const HelloBooking = () =>
+  bookingSite("HelloBooking", "https://hellobooking.lk");
+
+const Nuwantha = () =>
+  bookingSite(
+    "Nuwantha Enterprises",
+    "https://nuwanthaenterprises.com"
+  );
+
+const SLTB = () =>
+  bookingSite("SLTB eSeat", "https://sltb.eseat.lk");
+
+// All routes
 const busRoutes = [
+
+  // 1. Colombo ↔ Jaffna
   {
     from: "Colombo",
     to: "Jaffna",
     websites: [
-      {
-        name: "Magiya.lk",
-        url: "https://magiya.lk/journeys/search",
-        status: "Route advertised",
-        verified: true,
-        source: "https://magiya.lk",
-        lastChecked: "2026-11-17"
-      },
-      {
-        name: "BusSeat.lk",
-        url: "https://busseat.lk",
-        status: "Route documented",
-        verified: true,
-        source: "https://dialog.lk/value-added-services/purchase-bus-tickets",
-        lastChecked: null
-      },
-      {
-        name: "Bus.lk",
-        url: "https://bus.lk",
-        status: "Route advertised",
-        verified: true,
-        source: "https://bus.lk",
-        lastChecked: null
-      }
+      Magiya(),
+      BookMyBus(),
+      BusSeat(),
+      BusLK()
     ]
   },
 
+  // 2. Colombo ↔ Kandy
   {
     from: "Colombo",
     to: "Kandy",
     websites: [
-      {
-        name: "Bus.lk",
-        url: "https://bus.lk/bus-tickets/colombo-to-kandy",
-        status: "Route advertised",
-        verified: true,
-        source: "https://bus.lk",
-        lastChecked: null
-      }
+      Magiya(),
+      bookingSite(
+        "Bus.lk",
+        "https://bus.lk/bus-tickets/colombo-to-kandy",
+        true
+      ),
+      WayToGo()
     ]
   },
 
+  // 3. Colombo ↔ Trincomalee
   {
     from: "Colombo",
     to: "Trincomalee",
     websites: [
-      {
-        name: "Superline.lk",
-        url: "https://www.superline.lk/",
-        status: "Route advertised",
-        verified: true,
-        source: "https://www.superline.lk/",
-        lastChecked: "2026-11-17"
-      },
-      {
-        name: "Soyuru Sampath (via Magiya)",
-        url: "https://magiya.lk/journeys/search",
-        status: "Operator route documented",
-        verified: true,
-        source: "https://live.magiya.lk/operators/soyuru-sampath-super-line",
-        lastChecked: "2026-11-17"
-      },
-      {
-        name: "HelloBooking",
-        url: "https://hellobooking.lk",
-        status: "Check on booking website",
-        verified: false,
-        source: "https://hellobooking.lk",
-        lastChecked: null
-      }
+      Magiya(),
+      BookMyBus(),
+      Superline(),
+      bookingSite(
+        "Soyuru Sampath (via Magiya)",
+        "https://magiya.lk/journeys/search"
+      ),
+      HelloBooking(),
+      BusLK()
     ]
   },
 
+  // 4. Colombo ↔ Ampara
   {
     from: "Colombo",
     to: "Ampara",
     websites: [
-      {
-        name: "Nuwantha Enterprises",
-        url: "https://nuwanthaenterprises.com",
-        status: "Route advertised",
-        verified: true,
-        source: "https://nuwanthaenterprises.com",
-        lastChecked: "2026-11-17"
-      }
+      Magiya(),
+      Nuwantha(),
+      BusLK()
     ]
   },
 
+  // 5. Katunayake ↔ Badulla
   {
     from: "Katunayake",
     to: "Badulla",
     websites: [
-      {
-        name: "Nuwantha Enterprises",
-        url: "https://nuwanthaenterprises.com",
-        status: "Route advertised",
-        verified: true,
-        source: "https://nuwanthaenterprises.com",
-        lastChecked: "2026-11-17"
-      }
+      Nuwantha()
     ]
   },
 
+  // 6. Colombo ↔ Badulla
   {
     from: "Colombo",
     to: "Badulla",
     websites: [
-      {
-        name: "Nuwantha Enterprises",
-        url: "https://nuwanthaenterprises.com",
-        status: "Route advertised",
-        verified: true,
-        source: "https://nuwanthaenterprises.com",
-        lastChecked: "2026-11-17"
-      }
+      Magiya(),
+      Superline(),
+      Nuwantha(),
+      WayToGo(),
+      BusLK()
     ]
   },
 
+  // 7. Colombo ↔ Meegahakiula
   {
     from: "Colombo",
     to: "Meegahakiula",
     websites: [
-      {
-        name: "Nuwantha Enterprises",
-        url: "https://nuwanthaenterprises.com",
-        status: "Route advertised",
-        verified: true,
-        source: "https://nuwanthaenterprises.com",
-        lastChecked: "2026-11-17"
-      }
+      Nuwantha()
     ]
   },
 
+  // 8. Colombo ↔ Mahiyanganaya
   {
     from: "Colombo",
     to: "Mahiyanganaya",
     websites: [
-      {
-        name: "Nuwantha Enterprises",
-        url: "https://nuwanthaenterprises.com",
-        status: "Route advertised",
-        verified: true,
-        source: "https://nuwanthaenterprises.com",
-        lastChecked: "2026-11-17"
-      }
+      Magiya(),
+      Nuwantha()
     ]
   },
 
+  // 9. Panadura ↔ Kandy
   {
     from: "Panadura",
     to: "Kandy",
     websites: [
-      {
-        name: "Magiya.lk",
-        url: "https://magiya.lk/journeys/search",
-        status: "Route reported by user",
-        verified: true,
-        source: "https://magiya.lk/journeys/search",
-        lastChecked: null
-      }
+      Magiya()
     ]
   },
 
+  // 10. Colombo ↔ Nintavur
   {
     from: "Colombo",
     to: "Nintavur",
     websites: [
-      {
-        name: "Magiya.lk",
-        url: "https://magiya.lk/journeys/search",
-        status: "Route reported by user (both directions)",
-        verified: true,
-        source: "https://magiya.lk/journeys/search",
-        lastChecked: null
-      }
+      Magiya()
     ]
   },
 
+  // 11. Colombo ↔ Kalmunai
   {
     from: "Colombo",
     to: "Kalmunai",
     websites: [
-      {
-        name: "Magiya.lk",
-        url: "https://magiya.lk/journeys/search",
-        status: "Route reported by user (both directions)",
-        verified: true,
-        source: "https://magiya.lk/journeys/search",
-        lastChecked: null
-      },
-      {
-        name: "BusSeat.lk",
-        url: "https://busseat.lk",
-        status: "Check on booking website",
-        verified: false,
-        source: "https://busseat.lk",
-        lastChecked: null
-      }
+      Magiya(),
+      Superline(),
+      BusSeat(),
+      BusLK()
     ]
   },
 
+  // 12. Colombo ↔ Sammanthurai
   {
     from: "Colombo",
     to: "Sammanthurai",
     websites: [
-      {
-        name: "Magiya.lk",
-        url: "https://magiya.lk/journeys/search",
-        status: "Route reported by user (both directions)",
-        verified: true,
-        source: "https://magiya.lk/journeys/search",
-        lastChecked: null
-      }
+      Magiya()
     ]
   },
 
+  // 13. Makumbura ↔ Badulla
   {
     from: "Makumbura",
     to: "Badulla",
     websites: [
-      {
-        name: "Magiya.lk",
-        url: "https://magiya.lk",
-        status: "Check on booking website",
-        verified: true,
-        source: "https://magiya.lk",
-        lastChecked: null
-      }
+      Magiya(),
+      WayToGo()
     ]
   },
 
+  // 14. Colombo ↔ Passara
   {
     from: "Colombo",
     to: "Passara",
     websites: [
-      {
-        name: "Magiya.lk",
-        url: "https://magiya.lk",
-        status: "Check on booking website",
-        verified: true,
-        source: "https://magiya.lk",
-        lastChecked: null
-      }
+      Magiya(),
+      Superline(),
+      BusLK()
     ]
   },
 
+  // 15. Colombo ↔ Panama
   {
     from: "Colombo",
     to: "Panama",
     websites: [
-      {
-        name: "Magiya.lk",
-        url: "https://magiya.lk",
-        status: "Check on booking website",
-        verified: true,
-        source: "https://magiya.lk",
-        lastChecked: null
-      }
+      Magiya()
     ]
   },
 
+  // 16. Colombo ↔ Vavuniya
   {
     from: "Colombo",
     to: "Vavuniya",
     websites: [
-      {
-        name: "Magiya.lk",
-        url: "https://magiya.lk/journeys/search",
-        status: "Check on booking website",
-        verified: true,
-        source: "https://magiya.lk/journeys/search",
-        lastChecked: null
-      },
-      {
-        name: "HelloBooking",
-        url: "https://hellobooking.lk",
-        status: "Check on booking website",
-        verified: true,
-        source: "https://hellobooking.lk",
-        lastChecked: null
-      }
+      Magiya(),
+      HelloBooking(),
+      BusLK(),
+      BusSeat()
     ]
   },
 
+  // 17. Colombo ↔ Rathnapura
   {
     from: "Colombo",
     to: "Rathnapura",
     websites: [
-      {
-        name: "HelloBooking",
-        url: "https://hellobooking.lk",
-        status: "Check on booking website",
-        verified: true,
-        source: "https://hellobooking.lk",
-        lastChecked: null
-      }
+      HelloBooking()
     ]
   },
 
+  // 18. Colombo ↔ Anuradhapura
   {
     from: "Colombo",
     to: "Anuradhapura",
     websites: [
-      {
-        name: "HelloBooking",
-        url: "https://hellobooking.lk",
-        status: "Check on booking website",
-        verified: true,
-        source: "https://hellobooking.lk",
-        lastChecked: null
-      }
+      Magiya(),
+      BookMyBus(),
+      HelloBooking(),
+      BusLK(),
+      BusSeat()
     ]
   },
 
+  // 19. Colombo ↔ Akkaraipattu
   {
     from: "Colombo",
     to: "Akkaraipattu",
     websites: [
-      {
-        name: "Magiya.lk",
-        url: "https://magiya.lk/journeys/search",
-        status: "Check on booking website",
-        verified: true,
-        source: "https://magiya.lk",
-        lastChecked: null
-      },
-      {
-        name: "Superline.lk",
-        url: "https://www.superline.lk/",
-        status: "Check on booking website",
-        verified: true,
-        source: "https://www.superline.lk/",
-        lastChecked: null
-      },
-      {
-        name: "Bus.lk",
-        url: "https://bus.lk",
-        status: "Check on booking website",
-        verified: true,
-        source: "https://bus.lk",
-        lastChecked: null
-      },
-      {
-        name: "BusSeat.lk",
-        url: "https://busseat.lk",
-        status: "Check on booking website",
-        verified: true,
-        source: "https://busseat.lk",
-        lastChecked: null
-      }
+      Magiya(),
+      Superline(),
+      BusLK(),
+      BusSeat()
     ]
   },
 
-  // 20. RADDOLUGAMA <-> MAHARAGAMA
+  // 20. Raddolugama ↔ Maharagama
   {
     from: "Raddolugama",
     to: "Maharagama",
@@ -375,7 +286,7 @@ const busRoutes = [
     ]
   },
 
-  // 21. DIYATHALAWA <-> JAFFNA
+  // 21. Diyathalawa ↔ Jaffna
   {
     from: "Diyathalawa",
     to: "Jaffna",
@@ -394,11 +305,24 @@ const busRoutes = [
           "0775559510"
         ],
         verified: false
+      },
+      {
+        name: "Rohana Powerline",
+        departureTimes: {
+          Diyathalawa: ["05:30 PM"],
+          Jaffna: ["06:45 PM"]
+        },
+        phoneNumbers: [
+          "0778004812",
+          "0775354564",
+          "0718507212"
+        ],
+        verified: false
       }
     ]
   },
 
-  // 22. DENIYAYA <-> COLOMBO
+  // 22. Deniyaya ↔ Colombo
   {
     from: "Deniyaya",
     to: "Colombo",
@@ -419,11 +343,13 @@ const busRoutes = [
     ]
   },
 
-  // 23. COLOMBO <-> EMBILIPITIYA
+  // 23. Colombo ↔ Embilipitiya
   {
     from: "Colombo",
     to: "Embilipitiya",
-    websites: [],
+    websites: [
+      BusLK()
+    ],
     phoneBuses: [
       {
         name: "PRM Express",
@@ -447,126 +373,368 @@ const busRoutes = [
         verified: false
       }
     ]
+  },
+
+  // 24. Negombo ↔ Embilipitiya
+  {
+    from: "Negombo",
+    to: "Embilipitiya",
+    websites: [],
+    phoneBuses: [
+      {
+        name: "SLTB AC Bus",
+        departureTimes: {
+          Negombo: ["02:00 PM"],
+          Embilipitiya: ["08:45 AM"]
+        },
+        phoneNumbers: [
+          "0711970888",
+          "0719135630"
+        ],
+        verified: false
+      }
+    ]
+  },
+
+  // 25. Tangalle ↔ Jaffna
+  {
+    from: "Tangalle",
+    to: "Jaffna",
+    websites: [],
+    phoneBuses: [
+      {
+        name: "Samarasinhe Jet Liner",
+        departureTimes: {
+          Tangalle: ["05:10 PM"],
+          Jaffna: ["06:30 PM"]
+        },
+        phoneNumbers: ["0713080001"],
+        verified: false
+      }
+    ]
+  },
+
+  // 26. Tangalle ↔ Mulativu
+  {
+    from: "Tangalle",
+    to: "Mulativu",
+    websites: [],
+    phoneBuses: [
+      {
+        name: "Saman Full Night Express",
+        departureTimes: {
+          Tangalle: ["07:10 PM"],
+          Mulativu: ["07:00 PM"]
+        },
+        phoneNumbers: [
+          "0773961613",
+          "0713400430"
+        ],
+        verified: false
+      }
+    ]
+  },
+
+  // 27. Colombo ↔ Nuwara Eliya
+  {
+    from: "Colombo",
+    to: "Nuwara Eliya",
+    websites: [
+      Magiya(),
+      RADBookings(),
+      BusLK()
+    ]
+  },
+
+  // 28. Colombo ↔ Welimada
+  {
+    from: "Colombo",
+    to: "Welimada",
+    websites: [
+      Magiya(),
+      RADBookings(),
+      WayToGo()
+    ]
+  },
+
+  // 29. Colombo ↔ Mannar
+  {
+    from: "Colombo",
+    to: "Mannar",
+    websites: [
+      Magiya(),
+      BookMyBus(),
+      BusLK()
+    ]
+  },
+
+  // 30. Kadawatha ↔ Trincomalee
+  {
+    from: "Kadawatha",
+    to: "Trincomalee",
+    websites: [
+      BookMyBus()
+    ]
+  },
+
+  // 31. Matara ↔ Trincomalee
+  {
+    from: "Matara",
+    to: "Trincomalee",
+    websites: [
+      BookMyBus()
+    ]
+  },
+
+  // 32. Colombo ↔ Mulativu
+  {
+    from: "Colombo",
+    to: "Mulativu",
+    websites: [
+      BookMyBus()
+    ]
+  },
+
+  // 33. Colombo ↔ Batticaloa
+  {
+    from: "Colombo",
+    to: "Batticaloa",
+    websites: [
+      Magiya(),
+      BookMyBus(),
+      BusLK(),
+      BusSeat()
+    ]
+  },
+
+  // 34. Jaffna ↔ Trincomalee
+  {
+    from: "Jaffna",
+    to: "Trincomalee",
+    websites: [
+      BookMyBus()
+    ]
+  },
+
+  // 35. Colombo ↔ Kataragama
+  {
+    from: "Colombo",
+    to: "Kataragama",
+    websites: [
+      Magiya(),
+      WayToGo(),
+      BusLK()
+    ]
+  },
+
+  // 36. Kandy ↔ Kalmunai
+  {
+    from: "Kandy",
+    to: "Kalmunai",
+    websites: [
+      Magiya()
+    ]
+  },
+
+  // 37. Kandy ↔ Anuradhapura
+  {
+    from: "Kandy",
+    to: "Anuradhapura",
+    websites: [
+      Magiya()
+    ]
+  },
+
+  // 38. Colombo ↔ Hambantota
+  {
+    from: "Colombo",
+    to: "Hambantota",
+    websites: [
+      Magiya()
+    ]
+  },
+
+  // 39. Colombo ↔ Monaragala
+  {
+    from: "Colombo",
+    to: "Monaragala",
+    websites: [
+      Magiya(),
+      BusLK()
+    ]
+  },
+
+  // 40. Colombo ↔ Bibila
+  {
+    from: "Colombo",
+    to: "Bibila",
+    websites: [
+      Magiya(),
+      BusLK()
+    ]
+  },
+
+  // 41. Colombo ↔ Matale
+  {
+    from: "Colombo",
+    to: "Matale",
+    websites: [
+      Magiya()
+    ]
+  },
+
+  // 42. Galle ↔ Negombo
+  {
+    from: "Galle",
+    to: "Negombo",
+    websites: [
+      Magiya()
+    ]
+  },
+
+  // 43. Negombo ↔ Aluthgama
+  {
+    from: "Negombo",
+    to: "Aluthgama",
+    websites: [
+      Magiya()
+    ]
+  },
+
+  // 44. Colombo ↔ Janakapura
+  {
+    from: "Colombo",
+    to: "Janakapura",
+    websites: [
+      Magiya()
+    ]
+  },
+
+  // 45. Colombo ↔ Matara
+  {
+    from: "Colombo",
+    to: "Matara",
+    websites: [
+      Magiya()
+    ]
+  },
+
+  // 46. Kandy ↔ Jaffna
+  // SLTB ONLY
+  {
+    from: "Kandy",
+    to: "Jaffna",
+    websites: [
+      SLTB()
+    ],
+    phoneBuses: [],
+    sltbOnly: true
+  },
+
+  // 47. Monaragala ↔ Jaffna
+  // SLTB ONLY
+  {
+    from: "Monaragala",
+    to: "Jaffna",
+    websites: [
+      SLTB()
+    ],
+    phoneBuses: [],
+    sltbOnly: true
+  },
+
+  // 48. Jaffna ↔ Akkaraipattu
+  {
+    from: "Jaffna",
+    to: "Akkaraipattu",
+    websites: [
+      BusLK()
+    ]
+  },
+
+  // 49. Jaffna ↔ Batticaloa
+  {
+    from: "Jaffna",
+    to: "Batticaloa",
+    websites: [
+      BusLK()
+    ]
+  },
+
+  // 50. Jaffna ↔ Kalmunai
+  {
+    from: "Jaffna",
+    to: "Kalmunai",
+    websites: [
+      BusLK()
+    ]
+  },
+
+  // 51. Colombo ↔ Polonnaruwa
+  {
+    from: "Colombo",
+    to: "Polonnaruwa",
+    websites: [
+      BusSeat()
+    ]
+  },
+
+  // 52. Jaffna ↔ Nuwara Eliya
+  {
+    from: "Jaffna",
+    to: "Nuwara Eliya",
+    websites: [],
+    phoneBuses: [
+      {
+        name: "Danidi Express",
+        departureTimes: {
+          Jaffna: ["05:10 PM"],
+          "Nuwara Eliya": ["03:40 PM"]
+        },
+        phoneNumbers: ["0716803752"],
+        verified: false
+      }
+    ]
+  },
+
+  // 53. Jaffna ↔ Badulla
+  // UPDATED: SLTB eSeat + Dilmi Express
+  {
+    from: "Jaffna",
+    to: "Badulla",
+    websites: [
+      SLTB()
+    ],
+    phoneBuses: [
+      {
+        name: "Dilmi Express",
+        departureTimes: {
+          Jaffna: ["08:30 PM"],
+          Badulla: ["09:30 PM"]
+        },
+        phoneNumbers: [
+          "0722182377",
+          "0767187377"
+        ],
+        verified: false
+      }
+    ]
   }
-,
-{
-  from: "Negombo",
-  to: "Embilipitiya",
-  websites: [],
-  phoneBuses: [
-    {
-      name: "SLTB AC Bus",
-      departureTimes: {
-        Negombo: ["02:00 PM"],
-        Embilipitiya: ["08:45 AM"]
-      },
-      phoneNumbers: [
-        "0711970888",
-        "0719135630"
-      ],
-      verified: false
-    }
-  ]
-}
-,
-// Tangalle <-> Jaffna
-{
-  from: "Tangalle",
-  to: "Jaffna",
-  websites: [],
-  phoneBuses: [
-    {
-      name: "Samarasinhe Jet Liner",
-      departureTimes: {
-        Tangalle: ["05:10 PM"],
-        Jaffna: ["06:30 PM"]
-      },
-      phoneNumbers: [
-        "0713080001"
-      ],
-      verified: false
-    }
-  ]
-},
-
-// Tangalle <-> Mulativu
-{
-  from: "Tangalle",
-  to: "Mulativu",
-  websites: [],
-  phoneBuses: [
-    {
-      name: "Saman Full Night Express",
-      departureTimes: {
-        Tangalle: ["07:10 PM"],
-        Mulativu: ["07:00 PM"]
-      },
-      phoneNumbers: [
-        "0773961613",
-        "0713400430"
-      ],
-      verified: false
-    }
-  ]
-}
-,
-// Colombo ↔ Nuwara Eliya
-{
-  from: "Colombo",
-  to: "Nuwara Eliya",
-  websites: [
-    {
-      name: "Magiya.lk",
-      url: "https://magiya.lk/journeys/search",
-      status: "Check route on booking website",
-      verified: false,
-      source: "https://magiya.lk",
-      lastChecked: null
-    },
-    {
-      name: "RADBookings.lk",
-      url: "https://radbookings.lk",
-      status: "Check route on booking website",
-      verified: false,
-      source: "https://radbookings.lk",
-      lastChecked: null
-    }
-  ],
-  phoneBuses: []
-},
-
-// Colombo ↔ Welimada
-{
-  from: "Colombo",
-  to: "Welimada",
-  websites: [
-    {
-      name: "Magiya.lk",
-      url: "https://magiya.lk/journeys/search",
-      status: "Check route on booking website",
-      verified: false,
-      source: "https://magiya.lk",
-      lastChecked: null
-    },
-    {
-      name: "RADBookings.lk",
-      url: "https://radbookings.lk",
-      status: "Check route on booking website",
-      verified: false,
-      source: "https://radbookings.lk",
-      lastChecked: null
-    }
-  ],
-  phoneBuses: []
-}
-
-
-
 ];
 
-// Automatically add SLTB eSeat to routes
-// that already have booking websites.
+/*
+  WEBSITE CLEANUP
+
+  1. Remove duplicate website entries
+  2. Keep Magiya.lk first
+  3. Add SLTB eSeat to online routes
+  4. Preserve SLTB-only routes
+  5. Preserve phone booking details
+*/
+
+// Clean websites
 busRoutes.forEach(route => {
+
   if (!Array.isArray(route.websites)) {
     route.websites = [];
   }
@@ -575,18 +743,73 @@ busRoutes.forEach(route => {
     route.phoneBuses = [];
   }
 
-  const alreadyExists = route.websites.some(
-    website => website.name === "SLTB eSeat"
+  // Remove duplicate websites
+  const seenWebsites = new Set();
+
+  route.websites = route.websites.filter(site => {
+    const key = site.name.trim().toLowerCase();
+
+    if (seenWebsites.has(key)) {
+      return false;
+    }
+
+    seenWebsites.add(key);
+    return true;
+  });
+
+  // SLTB-only routes
+  if (route.sltbOnly === true) {
+    route.websites = [SLTB()];
+    route.phoneBuses = [];
+    return;
+  }
+
+  // Magiya.lk first
+  route.websites.sort((a, b) => {
+    const aIsMagiya =
+      a.name.toLowerCase() === "magiya.lk";
+
+    const bIsMagiya =
+      b.name.toLowerCase() === "magiya.lk";
+
+    if (aIsMagiya && !bIsMagiya) return -1;
+    if (!aIsMagiya && bIsMagiya) return 1;
+
+    return 0;
+  });
+
+  // Add SLTB eSeat to website routes
+  const hasSLTB = route.websites.some(
+    site => site.name === "SLTB eSeat"
   );
 
-  if (route.websites.length > 0 && !alreadyExists) {
-    route.websites.push({
-      name: "SLTB eSeat",
-      url: "https://sltb.eseat.lk",
-      status: "Check route on booking website",
-      verified: false,
-      source: "https://sltb.eseat.lk",
-      lastChecked: null
-    });
+  if (route.websites.length > 0 && !hasSLTB) {
+    route.websites.push(SLTB());
   }
 });
+
+// Check duplicate route pairs
+const routeKeys = new Set();
+
+busRoutes.forEach(route => {
+  const key = [
+    route.from.trim().toLowerCase(),
+    route.to.trim().toLowerCase()
+  ].sort().join("|");
+
+  if (routeKeys.has(key)) {
+    console.warn(
+      "Duplicate route found:",
+      route.from,
+      route.to
+    );
+  } else {
+    routeKeys.add(key);
+  }
+});
+
+console.log(
+  "BusFinder LK loaded:",
+  busRoutes.length,
+  "route pairs"
+);
