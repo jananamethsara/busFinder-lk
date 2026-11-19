@@ -509,6 +509,57 @@ const busRoutes = [
     }
   ]
 }
+,
+// Colombo ↔ Nuwara Eliya
+{
+  from: "Colombo",
+  to: "Nuwara Eliya",
+  websites: [
+    {
+      name: "Magiya.lk",
+      url: "https://magiya.lk/journeys/search",
+      status: "Check route on booking website",
+      verified: false,
+      source: "https://magiya.lk",
+      lastChecked: null
+    },
+    {
+      name: "RADBookings.lk",
+      url: "https://radbookings.lk",
+      status: "Check route on booking website",
+      verified: false,
+      source: "https://radbookings.lk",
+      lastChecked: null
+    }
+  ],
+  phoneBuses: []
+},
+
+// Colombo ↔ Welimada
+{
+  from: "Colombo",
+  to: "Welimada",
+  websites: [
+    {
+      name: "Magiya.lk",
+      url: "https://magiya.lk/journeys/search",
+      status: "Check route on booking website",
+      verified: false,
+      source: "https://magiya.lk",
+      lastChecked: null
+    },
+    {
+      name: "RADBookings.lk",
+      url: "https://radbookings.lk",
+      status: "Check route on booking website",
+      verified: false,
+      source: "https://radbookings.lk",
+      lastChecked: null
+    }
+  ],
+  phoneBuses: []
+}
+
 
 
 ];
